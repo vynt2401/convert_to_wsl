@@ -11,90 +11,115 @@ PDFs/: Các tài liệu lý thuyết và hướng dẫn.
 binDCT1.pdf: Paper "The BinDCT: Fast Multiplierless Approximation of the DCT" bởi Trac D. Tran (1999). Giới thiệu họ BinDCT (A, B, C) – xấp xỉ DCT nhanh chỉ dùng shift/add, coding gain gần DCT (8.77-8.82 dB), ứng dụng lossy/lossless image coding.
 binDCT.pdf: Paper "Fast Multiplierless Approximations of the DCT With the Lifting Scheme" bởi Jie Liang và Trac D. Tran (IEEE 2001). Chi tiết design BinDCT từ factorization Chen/Loeffler, lifting scheme, scaled DCT, ứng dụng JPEG/H.263+/lossless.
 
-# Lab 3.pdf: Tài liệu thực hành. Bao gồm:
+## Lab 3.pdf: Tài liệu thực hành. Bao gồm:
 
-# Bài tập: 1 (DCT manual)
-# Bài tập 2: (BinDCT explain/code type C)
-# Bài tập 3: (zigzag manual)
-# Bài tập: 4 (PSNR table for qualities 95/80/50/20, compare DCT vs BinDCT).
+### Bài tập: 1 (DCT manual)
+### Bài tập 2: (BinDCT explain/code type C)
+### Bài tập 3: (zigzag manual)
+### Bài tập: 4 (PSNR table for qualities 95/80/50/20, compare DCT vs BinDCT).
 
-## Bash Script Enviroment
-# Create env
-# Linux 
+### Có thể clone repos này về
+
+```
+git clone https://github.com/vynt2401/convert_to_wsl
+```
+--> sau đó trỏ đến thư mục chứa repos này
+
+### Bash Script Enviroment
+### Linux 
 
 Kiểm tra Python đã cài đặt chưa
 
-```bash
-#!/bin/bash
+```
+#Linux (ubuntu)
 python --version
-bash 
+```
 
-# Install packages
-pip install numpy==1.23.5 pillow==9.2.0 scipy==1.9.1 bitstream==2.6.0.2 matplotlib
+```
+#Windows
+python --version
+```
 
-# Install Spyder nếu cần (trong conda)
-conda install spyder -y
+Nếu chưa có, có thể cài đặt thông qua
 
-echo "Setup hoàn tất. Activate env: conda activate python3918"
-echo "Chạy Spyder: spyder"
+```
+#Linux (ubuntu)
+sudo apt-get install python3
+```
 
-Chạy: chmod +x setup.sh rồi ./setup.sh.
-Note: Điều chỉnh version Anaconda nếu cần (check anaconda.com/downloads). Nếu trên Windows, dùng Anaconda Navigator.
+```
+#Windows --> có thể tải tại đây
+https://www.python.org/downloads/
+```
 
-Cách chạy Demo
+Sau đó cài đặt Virtual Enviroment 
+```
+#Linux (ubuntu)
+python3 -m pip install virtualenv 
+```
 
-Config Spyder: Run > Configuration per file > Command line options: "img1.ppm out.jpeg 96" (input PPM, output JPEG, quality 0-100).
-Run encoder.py để nén.
-Run decoder.py để giải nén (nếu có).
+Tạo Enviroment và kích hoạt Enviroment Python
+
+```
+#Linux (ubuntu)
+virtualenv venv_name
+source venv_name/bin/activate
+```
+
+```
+#Windows
+python -m venv venv_name
+.\venv_name\Scripts\activate
+```
+
+Sau khi activate Enviroment --> tải các package cần thiết
+
+```
+#Windows
+pip install -r .\requirement.txt
+
+#Linux (ubuntu)
+python -m pip install requirement.txt
+```
+
+Sau khi đã tải xong các package cần thiết --> chạy chương trình các câu 
+
+```
+#Windows
+python .\cau1_chuan.py
+python .\cau2_chuan.py
+python .\cau3_chuan.py
+python .\cau4_chuan.py
+
+
+#Linux (ubuntu)
+
+python3 cau1_chuan.py
+python3 cau2_chuan.py
+python3 cau3_chuan.py
+python3 cau4_chuan.py
+```
 
 Bài tập
 Câu 1: DCT thủ công
 Triển khai DCT 2D thủ công cho block 8x8 (không dùng fftpack).
-Câu 2: BinDCT
 
+Câu 2: BinDCT
 Giải thích flowgraph BinDCT A/B/C từ binDCT1.pdf (Hình 4-6), và chung từ binDCT.pdf (Hình 5).
 Code BinDCT loại C (integer shift/add).
 
 Câu 3: Zigzag thủ công
 Triển khai zigzag scan/inverse (không dùng hàm sẵn).
+
 Câu 4: Tính PSNR
 Simulate nén/giải nén (DCT/BinDCT + quant + zigzag), tính PSNR cho qualities 95/80/50/20, bảng so sánh.
+
 Code bài tập ở test_code.py (ví dụ PSNR table với ảnh test).
 Kết quả mẫu
 Với ảnh test (e.g., Lena PPM grayscale):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QualityPSNR DCT Thủ côngPSNR BinDCT C9542.5 dB42.3 dB8038.2 dB38.0 dB5032.1 dB31.8 dB2025.4 dB25.0 dB
 Lưu ý
 
-Code dùng Python 3.9, test trên Spyder.
+Code dùng Python 3.9.
 Nếu chạy chậm (e.g., DCT loop), vectorize bằng NumPy.
-Liên hệ nếu lỗi env/pip.
+Liên hệ thông qua Profile nếu lỗi env/pip.
