@@ -1,46 +1,35 @@
 import numpy as np
 import pandas as pd
+from PIL import Image
 
-# Tạo ảnh test (512x512 grayscale gradient simulate Lena)
+
+# Ảnh test simulate (512x512 grayscale gradient, thay bằng ảnh thầy: np.array(Image.open('anh_thay.ppm').convert('L')))
 height, width = 512, 512
-x = np.linspace(0, 1, width)
-y = np.linspace(0, 1, height)
-X, Y = np.meshgrid(x, y)
-original = (255 * (X + Y) / 2).astype(np.uint8)
+#original = (255 * (np.linspace(0, 1, height)[:, np.newaxis] + np.linspace(0, 1, width)) / 2).astype(np.uint8)
 
-# Câu 1: DCT thủ công
-def get_epsilon(k):
-    return 1 / np.sqrt(2) if k == 0 else 1
+original = np.array(Image.open('img1.ppm').convert('L'))
+
+# Câu 1: DCT thủ công vectorized (precompute cos, matrix multiply)
+N = 8
+x = np.arange(N)
+cos_pre = np.cos((2 * x[:, None] + 1) * x * np.pi / 16)  # Cos matrix (N x N)
+epsilon = np.ones((N, N)) / np.sqrt(N)
+epsilon[0, :] /= np.sqrt(2)
+epsilon[:, 0] /= np.sqrt(2)
 
 def dct2(block):
-    N = block.shape[0]
-    result = np.zeros((N, N))
-    for u in range(N):
-        for v in range(N):
-            sum_val = 0.0
-            for x_ in range(N):
-                for y_ in range(N):
-                    cos_x = np.cos((2 * x_ + 1) * u * np.pi / (2 * N))
-                    cos_y = np.cos((2 * y_ + 1) * v * np.pi / (2 * N))
-                    sum_val += block[x_, y_] * cos_x * cos_y
-            result[u, v] = (2 / N) * get_epsilon(u) * get_epsilon(v) * sum_val
+    # Vectorized: F = epsilon * (cos_pre @ block @ cos_pre.T)
+    temp = cos_pre @ block
+    result = epsilon * (temp @ cos_pre.T)
     return result
 
 def idct2(block):
-    N = block.shape[0]
-    result = np.zeros((N, N))
-    for x in range(N):
-        for y in range(N):
-            sum_val = 0.0
-            for u in range(N):
-                for v in range(N):
-                    cos_x = np.cos((2 * x + 1) * u * np.pi / (2 * N))
-                    cos_y = np.cos((2 * y + 1) * v * np.pi / (2 * N))
-                    sum_val += get_epsilon(u) * get_epsilon(v) * block[u, v] * cos_x * cos_y
-            result[x, y] = (2 / N) * sum_val
+    # Inverse: block = epsilon * block, then cos_pre.T @ block @ cos_pre
+    temp = cos_pre.T @ (epsilon * block)
+    result = temp @ cos_pre
     return result
 
-# Câu 2: BinDCT loại C
+# Câu 2: BinDCT loại C (giữ nguyên, nhanh sẵn)
 def bin_dct_1d(x):
     tmp0 = x[0] + x[7]; tmp7 = x[0] - x[7]
     tmp1 = x[1] + x[6]; tmp6 = x[1] - x[6]
@@ -82,7 +71,7 @@ def bin_dct2(block):
         out[:, j] = col >> 3
     return out
 
-# Câu 3: Zigzag
+# Câu 3: Zigzag (giữ nguyên)
 zig_order = [
     (0,0), (0,1), (1,0), (2,0), (1,1), (0,2), (0,3), (1,2),
     (2,1), (3,0), (4,0), (3,1), (2,2), (1,3), (0,4), (0,5),
@@ -103,7 +92,7 @@ def inverse_zigzag_scan(zig):
         inv_block[pos[0], pos[1]] = zig[k]
     return inv_block
 
-# Bảng lượng tử
+# Bảng lượng tử (giữ nguyên)
 quant_luma = np.array([
     [16, 11, 10, 16, 124, 40, 51, 61],
     [12, 12, 14, 19, 26, 58, 60, 55],
@@ -122,7 +111,7 @@ def get_quant_table(quality):
         s = 200 - 2 * quality
     return np.floor((s * quant_luma + 50) / 100).clip(1, 255)
 
-# Simulate nén/giải nén (dựa 1,2,3)
+# Hàm simulate (giữ nguyên, nhưng nhanh hơn nhờ DCT vectorized)
 def simulate_compress_decompress(image, dct_func, idct_func, quality):
     h, w = image.shape
     pad_h = (8 - h % 8) % 8

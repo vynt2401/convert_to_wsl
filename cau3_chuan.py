@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 
-
+# Câu 3: Zigzag (giữ nguyên)
 zig_order = [
     (0,0), (0,1), (1,0), (2,0), (1,1), (0,2), (0,3), (1,2),
     (2,1), (3,0), (4,0), (3,1), (2,2), (1,3), (0,4), (0,5),
@@ -26,15 +26,12 @@ zig = zigzag_scan(block)
 print("Zigzag:\n", zig)
 
 
-
 def inverse_zigzag_scan(zig):
     inv_block = np.zeros((8,8))
     for k, pos in enumerate(zig_order):
         inv_block[pos[0], pos[1]] = zig[k]
     return inv_block
 
-
 print("\n======================================\n")
 zig_inverse = inverse_zigzag_scan(zig)
 print("\nZigzag Inverse:\n", zig_inverse)
-

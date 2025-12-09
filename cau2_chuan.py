@@ -3,8 +3,7 @@ import pandas as pd
 from PIL import Image
 
 
-
-# Câu 2: BinDCT loại C
+# Câu 2: BinDCT loại C (giữ nguyên, nhanh sẵn)
 def bin_dct_1d(x):
     tmp0 = x[0] + x[7]; tmp7 = x[0] - x[7]
     tmp1 = x[1] + x[6]; tmp6 = x[1] - x[6]

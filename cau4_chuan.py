@@ -1,14 +1,17 @@
 import numpy as np
 import pandas as pd
 from PIL import Image
-import Cau1  
-import Cau2 
-import Cau3
+import cau1_chuan
+import cau2_chuan
+import cau3_chuan
+
+
+height, width = 512, 512
+
 
 original = np.array(Image.open('img1.ppm').convert('L'))
 
 
-# Bảng lượng tử
 quant_luma = np.array([
     [16, 11, 10, 16, 124, 40, 51, 61],
     [12, 12, 14, 19, 26, 58, 60, 55],
@@ -27,7 +30,6 @@ def get_quant_table(quality):
         s = 200 - 2 * quality
     return np.floor((s * quant_luma + 50) / 100).clip(1, 255)
 
-# Simulate nén/giải nén (dựa 1,2,3)
 def simulate_compress_decompress(image, dct_func, idct_func, quality):
     h, w = image.shape
     pad_h = (8 - h % 8) % 8
@@ -39,15 +41,15 @@ def simulate_compress_decompress(image, dct_func, idct_func, quality):
     for i in range(0, h_p, 8):
         for j in range(0, w_p, 8):
             block = padded_image[i:i+8, j:j+8]
-            if dct_func == Cau2.bin_dct2:
+            if dct_func == cau2_chuan.bin_dct2:
                 block = block.astype(np.int32) - 128
             else:
                 block = block.astype(float) - 128
             dct_block = dct_func(block)
-            zig = Cau3.zigzag_scan(dct_block)
+            zig = cau3_chuan.zigzag_scan(dct_block)
             q_zig = np.round(zig / quant.flatten())
             dq_zig = q_zig * quant.flatten()
-            dq_block = Cau3.inverse_zigzag_scan(dq_zig)
+            dq_block = cau3_chuan.inverse_zigzag_scan(dq_zig)
             idct_block = idct_func(dq_block) + 128
             recon_p[i:i+8, j:j+8] = np.clip(idct_block, 0, 255)
     recon = recon_p[:h, :w].astype(np.uint8)
@@ -60,25 +62,18 @@ def psnr(original, reconstructed):
     max_val = 255.0
     return 10 * np.log10(max_val**2 / mse)
 
-#qualities = [95, 80, 50, 20]
-#results = []
-'''for q in qualities:
-    recon_dct = simulate_compress_decompress(original, Cau1.dct2, Cau1.idct2, q)
+qualities = [95, 80, 50, 20]
+results = []
+for q in qualities:
+    recon_dct = simulate_compress_decompress(original, cau1_chuan.dct2, cau1_chuan.idct2, q)
     psnr_dct = psnr(original, recon_dct)
-    recon_bin = simulate_compress_decompress(original, Cau2.bin_dct2, Cau1.idct2, q)
+    recon_bin = simulate_compress_decompress(original, cau2_chuan.bin_dct2, cau1_chuan.idct2, q)
     psnr_bin = psnr(original, recon_bin)
     results.append((q, round(psnr_dct, 2), round(psnr_bin, 2)))
-'''
-#df = pd.DataFrame(results, columns=['Quality', 'PSNR DCT Thủ công', 'PSNR BinDCT C'])
-#print(df)
 
-recon_dct = simulate_compress_decompress(original, Cau1.dct2, Cau1.idct2, 95)
-psnr_dct = psnr(original, recon_dct)
-recon_bin = simulate_compress_decompress(original, Cau2.bin_dct2, Cau1.idct2, 95)
-psnr_bin = psnr(original, recon_bin)
+print("\n=======================================\n")
 
-results = []
 
-results.append((95, round(psnr_dct, 2), round(psnr_bin, 2)))
 
-print(results)
+df = pd.DataFrame(results, columns=['Quality', 'PSNR DCT Thủ công', 'PSNR BinDCT C'])
+print(df)
