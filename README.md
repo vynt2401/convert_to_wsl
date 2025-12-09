@@ -112,11 +112,8 @@ Câu 3: Zigzag thủ công
 Triển khai zigzag scan/inverse (không dùng hàm sẵn).
 
 Câu 4: Tính PSNR
-Simulate nén/giải nén (DCT/BinDCT + quant + zigzag), tính PSNR cho qualities 95/80/50/20, bảng so sánh.
+Simulate nén/giải nén (DCT/BinDCT + quant + zigzag), tính PSNR cho qualities 95/80/50/20, tạo bảng so sánh.
 
-Code bài tập ở test_code.py (ví dụ PSNR table với ảnh test).
-Kết quả mẫu
-Với ảnh test (e.g., Lena PPM grayscale):
 
 Lưu ý
 
