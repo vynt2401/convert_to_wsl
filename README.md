@@ -24,9 +24,10 @@ binDCT.pdf: Paper "Fast Multiplierless Approximations of the DCT With the Liftin
 
 Kiểm tra Python đã cài đặt chưa
 
-'''
+```bash
+#!/bin/bash
 python --version
-'''
+bash 
 
 # Install packages
 pip install numpy==1.23.5 pillow==9.2.0 scipy==1.9.1 bitstream==2.6.0.2 matplotlib
