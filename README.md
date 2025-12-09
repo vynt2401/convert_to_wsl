@@ -10,45 +10,23 @@ Cấu trúc Repository
 PDFs/: Các tài liệu lý thuyết và hướng dẫn.
 binDCT1.pdf: Paper "The BinDCT: Fast Multiplierless Approximation of the DCT" bởi Trac D. Tran (1999). Giới thiệu họ BinDCT (A, B, C) – xấp xỉ DCT nhanh chỉ dùng shift/add, coding gain gần DCT (8.77-8.82 dB), ứng dụng lossy/lossless image coding.
 binDCT.pdf: Paper "Fast Multiplierless Approximations of the DCT With the Lifting Scheme" bởi Jie Liang và Trac D. Tran (IEEE 2001). Chi tiết design BinDCT từ factorization Chen/Loeffler, lifting scheme, scaled DCT, ứng dụng JPEG/H.263+/lossless.
-Lab 3.pdf: Tài liệu thực hành. Bao gồm:
-Mục tiêu: Tìm hiểu nén JPEG.
-Cài đặt: Anaconda, env Python 3.9.18, Spyder, pip packages (numpy==1.23.5, pillow==9.2.0, scipy==1.9.1, bitstream==2.6.0.2, matplotlib).
-Chạy demo: encoder.py với args (e.g., "img1.ppm out.jpeg 96").
-Quy trình JPEG: RGB to YCbCr, blocks 8x8, DCT, quant, zigzag, Huffman.
-Bài tập: 1 (DCT manual), 2 (BinDCT explain/code type C), 3 (zigzag manual), 4 (PSNR table for qualities 95/80/50/20, compare DCT vs BinDCT).
 
+# Lab 3.pdf: Tài liệu thực hành. Bao gồm:
 
-Code/: Code demo và bài tập.
-encoder.py: Code nén JPEG (dùng fftpack.dct, lượng tử, zigzag, Huffman).
-decoder.py: Code giải nén JPEG (inverse steps).
-test_code.py hoặc tương tự: Code bài tập (DCT manual, BinDCT, zigzag, PSNR simulate).
-Các file khác: Có thể có utils cho YCbCr, quant tables.
+# Bài tập: 1 (DCT manual)
+# Bài tập 2: (BinDCT explain/code type C)
+# Bài tập 3: (zigzag manual)
+# Bài tập: 4 (PSNR table for qualities 95/80/50/20, compare DCT vs BinDCT).
 
-Images/: Test images.
-img1.ppm: Ảnh input PPM (color/raw, e.g., Lena or sample).
-Output: JPEG files sau nén (e.g., out.jpeg).
-
-Env/: Files cho env (e.g., .envLab3, requirements).
-Khác: Có thể có notebooks Spyder hoặc logs.
-
-
-Nếu lỗi pip (như bitstream), update pip: python -m pip install --upgrade pip, hoặc tạo env mới.
-Setup with Bash Script (cho Linux/WSL)
-Nếu chạy trên WSL (Windows Subsystem for Linux), dùng script bash dưới để install Anaconda, create env, và pip packages. Save as setup.sh và chạy bash setup.sh.
-Bash#!/bin/bash
-
-# Install Anaconda nếu chưa có (cho Ubuntu/WSL)
-wget https://repo.anaconda.com/archive/Anaconda3-2024.06-Linux-x86_64.sh
-bash Anaconda3-2024.06-Linux-x86_64.sh -b -p $HOME/anaconda3
-export PATH="$HOME/anaconda3/bin:$PATH"
-conda init
-
-# Restart shell hoặc source
-source ~/.bashrc
-
+## Bash Script Enviroment
 # Create env
-conda create -n python3918 python=3.9.18 -y
-conda activate python3918
+# Linux 
+
+Kiểm tra Python đã cài đặt chưa
+
+'''
+python --version
+'''
 
 # Install packages
 pip install numpy==1.23.5 pillow==9.2.0 scipy==1.9.1 bitstream==2.6.0.2 matplotlib
